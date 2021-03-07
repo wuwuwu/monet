@@ -71,4 +71,3 @@ class TransactionChecker {
 let txChecker = new TransactionChecker('7607e4c3895e4b3f8f85c1cfa7f481d8', '0x19020bbb917199db899b64fdc43bd0e380c35a4d');
 txChecker.subscribe('pendingTransactions');
 txChecker.watchTransactions();
-.listen(process.env.PORT || 5000)
