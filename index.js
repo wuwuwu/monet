@@ -3,7 +3,12 @@ const Web3 = require('web3');
 // todo: check if change to more efficient way to use web3
 // todo: check websockets in heroku
 
-const projectId = '7607e4c3895e4b3f8f85c1cfa7f481d8'
+// setup twilio environment
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken, {lazyLoading: true, logLevel: 'debug'});
+
+// const projectId = '7607e4c3895e4b3f8f85c1cfa7f481d8'
 
 class TransactionChecker {
   web3;
@@ -40,6 +45,18 @@ class TransactionChecker {
                 if (tx.to != null && this.account == tx.to.toLowerCase()) {
                   // when the account belongs to our target, do shit
                   console.log({address: tx.from, value: this.web3.utils.fromWei(tx.value, 'ether'), timestamp: new Date()});
+                  const value = this.web3.utils.fromWei(tx.value, 'ETH');
+                  const address = tx.from;
+                  // Send Whatsapp todo: need to vwerify account with FB
+
+                  // Send the sms
+                  client.messages
+                    .create({
+                      body: `${address} did transaction for ${value}`,
+                      from: '+19175254862',
+                      to: '+529842053889'
+                    })
+                    .then(message => console.log(message.sid));
                 }
               }
             })
